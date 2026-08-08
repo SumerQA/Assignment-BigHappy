@@ -178,6 +178,4 @@ If login still fails, verify `.env` values and update selectors in `src/pages/Lo
 - [API_WORKFLOW.md](./API_WORKFLOW.md)
 
 
-Version: 1.1.0  
-Last updated: 2026-08-08 
-Auther: Sumer
+**Version: 1.1.0 | Last updated: 2026-08-08 | Author: Sumer**
