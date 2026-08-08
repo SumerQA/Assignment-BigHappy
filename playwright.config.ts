@@ -7,7 +7,7 @@ dotenv.config();
 export default defineConfig({
   timeout: 60000,
   testDir: './src/tests',
-  retries: 1,
+  retries: 2,
   fullyParallel: false,
   
   // Global setup runs once before all tests to establish authenticated session

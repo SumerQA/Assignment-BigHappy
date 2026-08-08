@@ -8,9 +8,10 @@ type ApiFixture = {
 
 export const test = base.extend<ApiFixture>({
   apiClient: async ({}, use) => {
-    logger.info('[FIXTURE] Initializing API fixture for ReqRes requests.');
+    const baseUrl = process.env.API_BASE_URL?.trim() || 'not configured';
+    logger.info(`[FIXTURE] Initializing API fixture for ReqRes requests using base URL: ${baseUrl}.`);
 
-    const apiClient = new BaseApi(process.env.API_BASE_URL?.trim() || '');
+    const apiClient = new BaseApi(baseUrl === 'not configured' ? '' : baseUrl);
     await use(apiClient);
   }
 });
