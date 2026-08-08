@@ -7,4 +7,4 @@
 package-lock.json
 /session-state
 /.tmp
-/.env
+.envdev
