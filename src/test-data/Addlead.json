@@ -1,0 +1,39 @@
+{
+  "firstNamePrefix": "Test Lead",
+  "middleName": "Automation",
+  "lastName": "Smith",
+  "company": {
+    "index": 3
+  },
+  "designationPrefix": "Manager",
+  "department": "Sales",
+  "leadSource": "Referral",
+  "serviceType": {
+    "label": "Staffing"
+  },
+  "function": {
+    "label": "HR"
+  },
+  "leadStatus": {
+    "label": "Lead - Meeting"
+  },
+  "phoneCell": "5551234567",
+  "phoneWork": "5559876543",
+  "personalEmailTemplate": "personal-{uniqueId}@example.com",
+  "workEmailTemplate": "work-{uniqueId}@example.com",
+  "addressTemplate": "{uniqueId} Test Automation Street",
+  "city": "Automation City",
+  "state": "Automation State",
+  "country": {
+    "label": "United States"
+  },
+  "zip": "876543",
+  "regionCovered": {
+    "index": 3
+  },
+  "linkedInTemplate": "https://www.linkedin.com/in/testlead{uniqueId}",
+  "expectedRevenue": "500000",
+  "expectedMandates": "10",
+  "notesTemplate": "Created by automation run {uniqueId}",
+  "mom": "Discussed potential collaboration opportunities. Lead is interested in our services and requested a follow-up next week."
+}

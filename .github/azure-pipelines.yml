@@ -1,0 +1,48 @@
+
+trigger:
+  branches:
+    include:
+      - QA
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  NODE_VERSION: '18.x'
+
+stages:
+  - stage: PlaywrightTests
+    displayName: "Run Playwright Enterprise Tests"
+    jobs:
+      - job: RunTests
+        displayName: "Execute Tests"
+        steps:
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(NODE_VERSION)
+            displayName: "Install Node.js"
+
+          - script: npm install
+            displayName: "Install Dependencies"
+
+          - script: npx playwright install --with-deps
+            displayName: "Install Playwright Browsers"
+
+          - script: npx playwright test --project=Chromium
+            displayName: "Run Playwright Tests"
+            env:
+              BASE_URL: $(BASE_URL)
+              EMAIL: $(EMAIL)
+              PASSWORD: $(PASSWORD)
+              EMAIL_TO: $(EMAIL_TO)
+              EMAIL_USER: $(EMAIL_USER)
+              EMAIL_PASS: $(EMAIL_PASS)
+              ENV: $(ENV)
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: 'reports'
+              ArtifactName: 'Playwright Test Report'
+            condition: always()
+            displayName: "Publish Test Reports"
