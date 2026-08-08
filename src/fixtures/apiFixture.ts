@@ -1,63 +1,17 @@
-import { test as base, request, APIRequestContext } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
+import { BaseApi } from '../api/BaseApi';
 import { logger } from '../utils/logger';
 
 type ApiFixture = {
-  apiContext: APIRequestContext;
-  authToken: string;
+  apiClient: BaseApi;
 };
 
 export const test = base.extend<ApiFixture>({
+  apiClient: async ({}, use) => {
+    logger.info('[FIXTURE] Initializing API fixture for ReqRes requests.');
 
-  authToken: async ({}, use) => {
-    logger.info('Generating OAuth Token...');
-
-    const authContext = await request.newContext();
-
-    const response = await authContext.post(
-      `${process.env.AUTH_BASE_URL}/oauth/token`,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: {
-          client_id: process.env.CLIENT_ID,
-          client_secret: process.env.CLIENT_SECRET,
-          grant_type: 'client_credentials'
-        }
-      }
-    );
-
-    if (!response.ok()) {
-      throw new Error(
-        `Token generation failed. Status: ${response.status()}`
-      );
-    }
-
-    const tokenResponse = await response.json();
-    const token = tokenResponse.access_token;
-
-    logger.info('OAuth Token generated successfully');
-
-    await authContext.dispose();
-    await use(token);
-  },
-
-  apiContext: async ({ authToken }, use) => {
-    logger.info(
-      `Initializing API Context with base URL: ${process.env.API_BASE_URL}`
-    );
-
-    const apiContext = await request.newContext({
-      baseURL: process.env.API_BASE_URL,
-      extraHTTPHeaders: {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    await use(apiContext);
-
-    await apiContext.dispose();
+    const apiClient = new BaseApi(process.env.API_BASE_URL?.trim() || '');
+    await use(apiClient);
   }
 });
 

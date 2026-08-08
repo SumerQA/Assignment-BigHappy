@@ -8,7 +8,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  NODE_VERSION: '18.x'
+  NODE_VERSION: '24.x'
 
 stages:
   - stage: PlaywrightTests
@@ -38,6 +38,8 @@ stages:
               EMAIL_TO: $(EMAIL_TO)
               EMAIL_USER: $(EMAIL_USER)
               EMAIL_PASS: $(EMAIL_PASS)
+              API_BASE_URL: $(API_BASE_URL)
+              API_TOKEN: $(secrets.API_TOKEN)
               ENV: $(ENV)
 
           - task: PublishBuildArtifacts@1

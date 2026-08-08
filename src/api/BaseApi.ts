@@ -1,5 +1,6 @@
 import { APIRequestContext, request } from '@playwright/test';
 import dotenv from 'dotenv';
+import { logger } from '../utils/logger';
 
 dotenv.config();
 
@@ -29,11 +30,16 @@ export class BaseApi {
   constructor(private readonly baseURL: string = process.env.API_BASE_URL?.trim() || '') {}
 
   private async createContext(): Promise<APIRequestContext> {
+    logger.info('[API STEP 1] Preparing API request context.');
+
     const apiKey = process.env.REQRES_API_KEY || process.env.API_TOKEN;
 
     if (!apiKey) {
+      logger.error('[API STEP 1] No ReqRes API token found.');
       throw new Error('No ReqRes API token found. Set REQRES_API_KEY or API_TOKEN in your environment before running API tests.');
     }
+
+    logger.info('[API STEP 2] API token detected. Creating request context.');
 
     return request.newContext({
       extraHTTPHeaders: {
@@ -45,17 +51,25 @@ export class BaseApi {
   }
 
   private buildUrl(endpoint: string): string {
+    logger.info('[API STEP 3] Building the full API URL.');
+
     const normalizedBase = this.baseURL.replace(/\/+$/, '');
 
     if (!normalizedBase) {
+      logger.error('[API STEP 3] API_BASE_URL is not set.');
       throw new Error('API_BASE_URL is not set. Please configure it in your environment before running API tests.');
     }
 
     const basePath = normalizedBase.endsWith('/api') ? normalizedBase : `${normalizedBase}/api`;
-    return `${basePath}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+    const finalUrl = `${basePath}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+
+    logger.info(`[API STEP 3] Final request URL: ${finalUrl}`);
+    return finalUrl;
   }
 
   private async sendRequest(method: 'get' | 'post' | 'put' | 'delete', endpoint: string, data?: Record<string, unknown>) {
+    logger.info(`[API STEP 4] Sending ${method.toUpperCase()} request to ${endpoint}.`);
+
     const context = await this.createContext();
 
     try {
@@ -77,6 +91,7 @@ export class BaseApi {
       }
 
       const bodyText = await response.text();
+      logger.info(`[API STEP 5] Response received with status ${response.status()} for ${method.toUpperCase()} ${endpoint}.`);
       return new ApiResponseWrapper(response.status(), bodyText);
     } finally {
       await context.dispose();
