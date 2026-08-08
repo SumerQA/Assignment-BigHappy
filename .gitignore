@@ -1,0 +1,10 @@
+.git
+/playwright-report
+/test-results
+/allure-results
+/reports
+/node_modules
+package-lock.json
+/session-state
+/.tmp
+/.env
